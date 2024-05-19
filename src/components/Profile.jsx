@@ -37,7 +37,7 @@ const Profile = () => {
 
   return (
     <div style={{ padding: 24 }}>
-        <Link to="/">Home</Link>
+        <Link to="/" className="text-blue-500 underline hover:text-blue-700 font-bold mb-4 text-lg">Home</Link>
       {loading ? (
         <Spin />
       ) : (

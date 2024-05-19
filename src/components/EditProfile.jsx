@@ -36,47 +36,54 @@ const EditProfile = () => {
   }
 
   return (
-    <Form
-      name="editProfile"
-      initialValues={user}
-      onFinish={onFinish}
-    >
-      <Form.Item
-        label="Name"
-        name="name"
-        rules={[{ required: true, message: 'Please input your name!' }]}
+    <div className="flex justify-center items-center h-screen bg-gray-200">
+      <Form
+        name="editProfile"
+        initialValues={user}
+        onFinish={onFinish}
+        className="bg-white p-8 rounded shadow-md"
       >
-        <Input />
-      </Form.Item>
+        <Form.Item
+          label="Name"
+          name="name"
+          rules={[{ required: true, message: 'Please input your name!' }]}
+          className="mb-4"
+        >
+          <Input className="rounded" />
+        </Form.Item>
 
-      <Form.Item
-        label="Email"
-        name="email"
-        rules={[{ required: true, message: 'Please input your email!' }]}
-      >
-        <Input />
-      </Form.Item>
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[{ required: true, message: 'Please input your email!' }]}
+          className="mb-4"
+        >
+          <Input className="rounded" />
+        </Form.Item>
 
-      <Form.Item
-        label="Role"
-        name="role"
-      >
-        <Input disabled />
-      </Form.Item>
+        <Form.Item
+          label="Role"
+          name="role"
+          className="mb-4"
+        >
+          <Input disabled className="rounded" />
+        </Form.Item>
 
-      <Form.Item
-        label="Position"
-        name="position"
-      >
-        <Input disabled />
-      </Form.Item>
+        <Form.Item
+          label="Position"
+          name="position"
+          className="mb-4"
+        >
+          <Input disabled className="rounded" />
+        </Form.Item>
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Update Profile
-        </Button>
-      </Form.Item>
-    </Form>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" className="w-full rounded">
+            Update Profile
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 
