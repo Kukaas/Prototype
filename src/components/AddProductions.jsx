@@ -23,6 +23,7 @@ const AddProductions = () => {
       <Form
         name="addProduction"
         onFinish={onFinish}
+        initialValues={{ status: 'IN_PROGRESS' }}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
       >
         <Form.Item
@@ -60,7 +61,6 @@ const AddProductions = () => {
         <Form.Item
           label="Status"
           name="status"
-          initialValues={{ status: 'IN_PROGRESS' }}
         >
           <Input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="IN_PROGRESS" disabled/>
         </Form.Item>

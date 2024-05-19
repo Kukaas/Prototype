@@ -32,7 +32,7 @@ const Profile = () => {
   };
 
   const handleAddProductions = () => {
-    navigate(`/profile/production`);
+    navigate(`/profile/production/${id}`);
   };
 
   return (
