@@ -37,7 +37,7 @@ const AddProductions = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-200">
+    <div className="flex justify-center items-start h-screen bg-gray-200 overflow-auto">
       <Form
         name="addProduction"
         onFinish={onFinish}

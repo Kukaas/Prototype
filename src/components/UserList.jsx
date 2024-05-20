@@ -24,8 +24,12 @@ const UserList = () => {
     fetchUsers();
   }, []);
 
-  const handleViewProfile = (id) => {
-    navigate(`/profile/${id}`);
+  const handleViewProfile = (id, role) => {
+    if (role === 'ADMIN') {
+      navigate(`/profile/${id}`);
+    } else {
+      navigate(`/profile/${id}`);
+    }
   };
 
   const columns = [
@@ -53,7 +57,7 @@ const UserList = () => {
       title: 'View Profile',
       key: 'viewProfile',
       render: (text, record) => (
-        <Button onClick={() => handleViewProfile(record.id)}>View Profile</Button>
+        <Button onClick={() => handleViewProfile(record.id, record.role)}>View Profile</Button>
       ),
     },
   ];

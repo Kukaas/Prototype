@@ -3,14 +3,35 @@ import { Button, Card, Spin, message, Row, Col, Descriptions, Space, Typography 
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import Productions from './Productions';
 import moment from 'moment';
 
-const Profile = () => {
-  const [user, setUser] = useState(null);
+import AdminProductions from './AdminProductions';
+
+const AdminDashboard = () => {
+  const [user, setUser ] = useState(null);
+//   const [ setProductions] = useState([]);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+
+
+//   useEffect(() => {
+//     const fetchProductions = async () => {
+//       try {
+//         let response;
+//         if (user.role === 'ADMIN') {
+//           response = await axios.get(`https://api-prototype-kukaas-projects.vercel.app/api/production`);
+//         } else {
+//           response = await axios.get(`https://api-prototype-kukaas-projects.vercel.app/api/production/email/${user.email}`);
+//         }
+//         setProductions(response.data);
+//       } catch (error) {
+//         console.error('Failed to fetch productions:', error);
+//       }
+//     };
+  
+//     fetchProductions();
+//   });
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -18,7 +39,6 @@ const Profile = () => {
       try {
         const response = await axios.get(`https://api-prototype-kukaas-projects.vercel.app/api/user/${id}`);
         setUser(response.data);
-        console.log(response.data.role); 
       } catch (error) {
         message.error('Failed to load user data');
       } finally {
@@ -29,29 +49,14 @@ const Profile = () => {
     fetchUser();
   }, [id]);
 
-  if (user) {
-    console.log(user); // Log the entire user object
-  }
-
   const handleEditProfile = () => {
     navigate(`/profile/edit/${id}`);
   };
 
-  const handleAddProductions = () => {
-    navigate(`/profile/production/${id}`);
-  };
-
-  const handleViewProductions = () => {
-    navigate(`/profile/admin/productions`);
-  };
-
-  const handleViewFinishedProducts = () => {
-    navigate(`/profile/admin/finished-products`);
-  }
 
   return (
     <div style={{ padding: 24 }}>
-      <Link to="/" className="text-blue-500 underline hover:text-blue-700 font-bold mb-4 text-lg">Home</Link>
+        <Link to="/" className="text-blue-500 underline hover:text-blue-700 font-bold mb-4 text-lg">Home</Link>
       {loading ? (
         <Spin />
       ) : (
@@ -77,48 +82,9 @@ const Profile = () => {
                     >
                       Edit Profile
                     </Button>
-                    {user.role !== 'ADMIN' && (
-                      <Button 
-                        type="default" 
-                        onClick={handleAddProductions} 
-                        style={{ borderRadius: '5px' }}
-                      >
-                        Add Productions
-                      </Button>
-                    )}
-
                   </Space>
-                  {user.role === 'ADMIN' ? (
-                      <Typography.Title level={2} style={{ textAlign: 'center', marginTop: '2rem' }}>
-                        Menu
-                      </Typography.Title>
-                    ) : (
-                      <Typography.Title level={2} style={{ textAlign: 'center', marginTop: '2rem' }}>
-                        Productions
-                      </Typography.Title>
-                  )}
-
-                  {user.role === 'ADMIN' ? (
-                    <>
-                      <Button 
-                        type="default" 
-                        onClick={handleViewProductions} 
-                        style={{ borderRadius: '5px', marginTop: '1rem' }}
-                      >
-                        View All Productions
-                      </Button>
-
-                      <Button 
-                      type="default" 
-                      onClick={handleViewFinishedProducts} 
-                      style={{ borderRadius: '5px', marginTop: '1rem' }}
-                      >
-                      View Finished Products
-                      </Button>
-                    </>
-                  ) : (
-                    <Productions email={user.email} />
-                  )}
+                  <Typography.Title level={2} style={{ textAlign: 'center', marginTop: '2rem' }}>Productions</Typography.Title>
+                    <AdminProductions user={user} />
                 </Card>
               </Col>
             </Row>
@@ -129,7 +95,7 @@ const Profile = () => {
   );
 };
 
-Profile.propTypes = {
+AdminDashboard.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -137,4 +103,4 @@ Profile.propTypes = {
   }).isRequired,
 };
 
-export default Profile;
+export default AdminDashboard;
