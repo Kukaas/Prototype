@@ -109,7 +109,7 @@ const Productions = ({ email }) => {
     },
   ];
 
-  return <Table columns={columns} dataSource={productions} rowKey="id" />;
+  return <Table columns={columns} dataSource={productions} rowKey="id" pagination={{ pageSize: 4 }}/>;
 };
 
 Productions.propTypes = {

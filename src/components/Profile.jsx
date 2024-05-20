@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Spin, message } from 'antd';
+import { Button, Card, Spin, message, Row, Col, Descriptions, Space, Typography } from 'antd';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Productions from './Productions';
+import moment from 'moment';
 
 const Profile = () => {
   const [user, setUser ] = useState(null);
@@ -44,14 +45,39 @@ const Profile = () => {
       ) : (
         user && (
           <>
-            <Card title={user.name}>
-              <p>Email: {user.email}</p>
-              <p>Role: {user.role}</p>
-              <p>Position: {user.position}</p>
-              <Button onClick={handleEditProfile}>Edit Profile</Button>
-              <Button onClick={handleAddProductions}>Add Productions</Button>
-            </Card>
-            <Productions email={user.email} />
+            <Row justify="center" style={{ marginTop: '2rem' }}>
+              <Col xs={24} sm={24} md={20} lg={20} xl={18}>
+                <Card 
+                  title={user.name} 
+                  style={{ borderRadius: '15px', boxShadow: '0px 0px 10px rgba(0,0,0,0.1)' }}
+                >
+                  <Descriptions column={1} size="small">
+                    <Descriptions.Item label="Email">{user.email}</Descriptions.Item>
+                    <Descriptions.Item label="Birth Date">{moment(user.birthDate).format('MMMM D, YYYY')}</Descriptions.Item>
+                    <Descriptions.Item label="Address">{user.address}</Descriptions.Item>
+                  </Descriptions>
+
+                  <Space size="middle">
+                    <Button 
+                      type="primary" 
+                      onClick={handleEditProfile} 
+                      style={{ borderRadius: '5px' }}
+                    >
+                      Edit Profile
+                    </Button>
+                    <Button 
+                      type="default" 
+                      onClick={handleAddProductions} 
+                      style={{ borderRadius: '5px' }}
+                    >
+                      Add Productions
+                    </Button>
+                  </Space>
+                  <Typography.Title level={2} style={{ textAlign: 'center', marginTop: '2rem' }}>Productions</Typography.Title>
+                  <Productions email={user.email} />
+                </Card>
+              </Col>
+            </Row>
           </>
         )
       )}
