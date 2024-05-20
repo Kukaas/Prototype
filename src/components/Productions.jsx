@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, Select, Button, message } from 'antd';
+import { Table, Select, Button, message, Space } from 'antd';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 const Productions = ({ email }) => {
   const [productions, setProductions] = useState([]);
@@ -20,6 +21,24 @@ const Productions = ({ email }) => {
     fetchProductions();
   }, [email]);
 
+  //DELETE production
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`https://api-prototype-kukaas-projects.vercel.app/api/production/${id}`);
+  
+      setProductions((prevProductions) =>
+        prevProductions.filter((production) => production.id !== id)
+      );
+  
+      message.success('Production deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete production:', error);
+      message.error('Failed to delete production');
+    }
+  };
+
+
+  //UPDATE production
   const handleUpdate = async (id) => {
     const status = selectedStatus[id];
     if (status) {
@@ -33,8 +52,8 @@ const Productions = ({ email }) => {
         productType: productionToUpdate.productType,
         unitPrice: productionToUpdate.unitPrice,
         quantity: productionToUpdate.quantity,
-        status: status, 
-        userEmail: email, 
+        status: status,
+        userEmail: email,
       };
 
       console.log('Updating status with payload:', payload);
@@ -63,30 +82,36 @@ const Productions = ({ email }) => {
       title: 'Product Type',
       dataIndex: 'productType',
       key: 'productType',
+      width: 150,
     },
     {
       title: 'Start Time',
       dataIndex: 'startTime',
       key: 'startTime',
+      width: 200,
+      render: (startTime) => moment(startTime).format('MMMM DD, YYYY hh:mm A'),
     },
     {
       title: 'Unit Price',
       dataIndex: 'unitPrice',
       key: 'unitPrice',
+      width: 150,
     },
     {
       title: 'Quantity',
       dataIndex: 'quantity',
       key: 'quantity',
+      width: 100,
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      width: 200,
       render: (status, record) => (
         <Select
           defaultValue={status}
-          style={{ width: 120 }}
+          style={{ width: 180 }}
           onChange={(value) => setSelectedStatus({ ...selectedStatus, [record.id]: value })}
           disabled={record.status === 'COMPLETED'}
         >
@@ -99,17 +124,41 @@ const Productions = ({ email }) => {
       ),
     },
     {
-      title: 'Update',
-      key: 'update',
+      title: 'Actions',
+      key: 'actions',
+      width: 100,
       render: (text, record) => (
-        <Button onClick={() => handleUpdate(record.id)} disabled={record.status === 'COMPLETED'}>
-          Update
-        </Button>
+        <Space size="middle">
+          <Button onClick={() => handleUpdate(record.id)} disabled={record.status === 'COMPLETED'}>
+            Update
+          </Button>
+          <Button 
+            onClick={() => handleDelete(record.id)} 
+            disabled={record.status === 'COMPLETED'}  
+            danger 
+            style={{ 
+              color: record.status !== 'COMPLETED' ? '#ff4d4f' : ''
+            }}          
+          >
+            Delete
+          </Button>
+        </Space>
+        
       ),
     },
   ];
 
-  return <Table columns={columns} dataSource={productions} rowKey="id" pagination={{ pageSize: 4 }}/>;
+  return (
+    <div className="productions-table-container">
+      <Table
+        columns={columns}
+        dataSource={productions}
+        rowKey="id"
+        pagination={{ pageSize: 4 }}
+        scroll={{ x: 1000 }}
+      />
+    </div>
+  );
 };
 
 Productions.propTypes = {

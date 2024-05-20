@@ -1,13 +1,31 @@
-import { Form, Input, Button, DatePicker, InputNumber, message } from 'antd';
+import { Form, Input, Button, DatePicker, InputNumber, message, Spin } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 const AddProductions = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`https://api-prototype-kukaas-projects.vercel.app/api/user/${id}`);
+        setUser(response.data);
+      } catch (error) {
+        message.error('Failed to load user data');
+      }
+    };
+
+    fetchUser();
+  }, [id]);
+
+  if (!user) {
+    return <Spin />;
+  }
 
   const onFinish = async (values) => {
-
     try {
       const response = await axios.post('https://api-prototype-kukaas-projects.vercel.app/api/production', values);
       console.log('Response:', response); // Log response
@@ -19,66 +37,80 @@ const AddProductions = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center h-screen bg-gray-200">
       <Form
         name="addProduction"
         onFinish={onFinish}
-        initialValues={{ status: 'IN_PROGRESS' }}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        initialValues={{ status: 'IN_PROGRESS', userEmail: user.email }}
+        className="bg-white p-8 rounded shadow-md w-full md:w-1/2 lg:w-1/3"
+        layout="vertical"
       >
+        <h2 className="text-center text-2xl font-bold mb-8">Edit Production</h2>
         <Form.Item
-          label="Product Type"
+          label={<span className="font-bold text-lg">Product Type</span>}
           name="productType"
           rules={[{ required: true, message: 'Please select the product type!' }]}
+          className="mb-2"
         >
-          <Input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="eg. Polo, Palda"/>
+          <Input className="rounded" placeholder="eg. Polo, Palda"/>
         </Form.Item>
 
         <Form.Item
-          label="Start Time"
+          label={<span className="font-bold text-lg">Start Time</span>}
           name="startTime"
           rules={[{ required: true, message: 'Please select the start time!' }]}
+          className="mb-2"
         >
-          <DatePicker showTime className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          <DatePicker showTime className="rounded w-full" />
         </Form.Item>
 
         <Form.Item
-          label="Unit Price"
+          label={<span className="font-bold text-lg">Unit Price</span>}
           name="unitPrice"
           rules={[{ required: true, message: 'Please input the unit price!' }]}
+          className="mb-2"
         >
-          <InputNumber min={0} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          <InputNumber min={1} className="rounded w-full" />
         </Form.Item>
 
         <Form.Item
-          label="Quantity"
+          label={<span className="font-bold text-lg">Quantity</span>}
           name="quantity"
           rules={[{ required: true, message: 'Please input the quantity!' }]}
+          className="mb-2"
         >
-          <InputNumber min={1} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          <InputNumber min={1} className="rounded w-full" placeholder="Quantity"/>
         </Form.Item>
 
         <Form.Item
-          label="Status"
+          label={<span className="font-bold text-lg">Status</span>}
           name="status"
+          className="mb-2"
         >
-          <Input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="IN_PROGRESS" disabled/>
+          <Input className="rounded" placeholder="IN_PROGRESS" disabled/>
         </Form.Item>
 
         <Form.Item
-            label="Email"
+            label={<span className="font-bold text-lg">Email</span>}
             name="userEmail"
-            rules={[
-            { required: true, message: 'Please input your email!' },
-            { type: 'email', message: 'The input is not valid E-mail!' }
-            ]}
+            className="mb-2"
         >
-            <Input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="eg. john@example.com"/>
+            <Input className="rounded" />
         </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        <Form.Item
+        className="mb-2"
+        >
+          <Button type="primary" htmlType="submit" className="w-full rounded">
             Add Production
+          </Button>
+        </Form.Item>
+
+        <Form.Item
+          className="mb-2"
+        >
+          <Button type="default" onClick={() => navigate(`/profile/${id}`)} className="w-full rounded">
+            Cancel
           </Button>
         </Form.Item>
       </Form>
