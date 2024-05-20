@@ -3,7 +3,7 @@ import './App.css';
 import Profile from './components/Profile'; 
 import EditProfile from './components/EditProfile';
 import AddProductions from './components/AddProductions'
-import UserList from './components/userList';
+import UserList from './components/UserList';
 
 function App() {
   return (

@@ -3,9 +3,10 @@ import { Button, Card, Spin, message } from 'antd';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import Productions from './Productions';
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser ] = useState(null);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -42,13 +43,16 @@ const Profile = () => {
         <Spin />
       ) : (
         user && (
-          <Card title={user.name}>
-            <p>Email: {user.email}</p>
-            <p>Role: {user.role}</p>
-            <p>Position: {user.position}</p>
-            <Button onClick={handleEditProfile}>Edit Profile</Button>
-            <Button onClick={handleAddProductions}>Add Productions</Button>
-          </Card>
+          <>
+            <Card title={user.name}>
+              <p>Email: {user.email}</p>
+              <p>Role: {user.role}</p>
+              <p>Position: {user.position}</p>
+              <Button onClick={handleEditProfile}>Edit Profile</Button>
+              <Button onClick={handleAddProductions}>Add Productions</Button>
+            </Card>
+            <Productions email={user.email} />
+          </>
         )
       )}
     </div>
