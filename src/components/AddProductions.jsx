@@ -61,7 +61,7 @@ const AddProductions = () => {
           rules={[{ required: true, message: 'Please select the start time!' }]}
           className="mb-2"
         >
-          <DatePicker showTime className="rounded w-full" />
+          <DatePicker className="rounded w-full" />
         </Form.Item>
 
         <Form.Item
