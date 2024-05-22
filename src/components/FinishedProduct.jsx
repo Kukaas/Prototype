@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table } from 'antd';
+import { Table, Button, message, Select } from 'antd';
+
+const { Option } = Select;
 
 const FinishedProduct = () => {
   const [data, setData] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -13,6 +16,53 @@ const FinishedProduct = () => {
 
     fetchData();
   }, []);
+
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`https://api-prototype-kukaas-projects.vercel.app/api/finished-product/${id}`);
+      setData((prevData) => prevData.filter((item) => item.id !== id));
+
+      message.success('Finished product deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete finished product:', error);
+    }
+  };
+
+  const handleStatusChange = async (id) => {
+    const status = selectedStatus[id];
+
+    if (status) {
+      const finishedProductToUpdate = data.find((prod) => prod.id === id);
+      if (!finishedProductToUpdate) {
+        message.error('Finished product not found');
+        return;
+      }
+
+      const payload = {
+        productType: finishedProductToUpdate.productType,
+        unitPrice: finishedProductToUpdate.unitPrice,
+        quantity: finishedProductToUpdate.quantity,
+        status: status,
+        totalCost: finishedProductToUpdate.totalCost,
+      };
+
+      console.log('Updating status with payload:', payload);
+
+      try {
+        await axios.put(`https://api-prototype-kukaas-projects.vercel.app/api/finished-product/${id}`, payload);
+
+        setData((prevData) =>
+          prevData.map((item) => (item.id === id ? { ...item, status } : item))
+        );
+        message.success('Finished product updated successfully');
+      } catch (error) {
+        message.error('Failed to update finished product');
+      }
+    }
+  };
+  
+
 
   const columns = [
     {
@@ -29,6 +79,16 @@ const FinishedProduct = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      render: (text, record) => (
+        <Select 
+          defaultValue={record.status} 
+          onChange={(value) => setSelectedStatus({ ...selectedStatus, [record.id]: value })}
+        >
+          <Option value="SOLD">SOLD</Option>
+          <Option value="Available">Available</Option>
+        </Select>
+      ),
+
     },
     {
       title: 'Unit Price',
@@ -42,12 +102,38 @@ const FinishedProduct = () => {
     },
     {
       title: 'Production ID',
-      dataIndex: 'productionId',
+      dataIndex: ['production', 'id'],
       key: 'productionId',
     },
+    {
+      title: 'Assigned Employee',
+      dataIndex: ['production', 'user', 'name'],
+      key: 'userName',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <>
+          <Button onClick={() => handleStatusChange(record.id)}>Update</Button>
+          <Button onClick={() => handleDelete(record.id)} danger>Delete</Button>
+        </>
+      ),
+    },
+
   ];
 
-  return <Table columns={columns} dataSource={data} />;
+  return (
+    <>
+      <Table 
+        columns={columns} 
+        dataSource={data} 
+        rowKey="id"
+        pagination={{ pageSize: 4 }}
+        scroll={{ x: 1000 }}
+      />;
+    </>
+  )
 };
 
 export default FinishedProduct;

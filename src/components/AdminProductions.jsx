@@ -75,7 +75,6 @@ const AdminProductions = ({ role }) => {
           defaultValue={status}
           style={{ width: 180 }}
           onChange={(value) => setSelectedStatus({ ...selectedStatus, [record.id]: value })}
-          disabled={record.status === 'COMPLETED'}
         >
           <Select.Option value="PATTERN_MAKING">PATTERN_MAKING</Select.Option>
           <Select.Option value="CUTTING">CUTTING</Select.Option>
@@ -92,12 +91,7 @@ const AdminProductions = ({ role }) => {
       render: (text, record) => (
         <Space size="middle">
           <Button 
-            onClick={() => handleDelete(record.id)} 
-            disabled={record.status === 'COMPLETED'}  
-            danger 
-            style={{ 
-              color: record.status !== 'COMPLETED' ? '#ff4d4f' : ''
-            }}          
+            onClick={() => handleDelete(record.id)}  
           >
             Delete
           </Button>

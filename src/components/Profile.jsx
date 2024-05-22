@@ -29,9 +29,6 @@ const Profile = () => {
     fetchUser();
   }, [id]);
 
-  if (user) {
-    console.log(user); // Log the entire user object
-  }
 
   const handleEditProfile = () => {
     navigate(`/profile/edit/${id}`);
@@ -47,6 +44,10 @@ const Profile = () => {
 
   const handleViewFinishedProducts = () => {
     navigate(`/profile/admin/finished-products`);
+  }
+
+  const handleViewInvenotry = () => {
+    navigate(`/profile/admin/inventory`);
   }
 
   return (
@@ -114,6 +115,14 @@ const Profile = () => {
                       style={{ borderRadius: '5px', marginTop: '1rem' }}
                       >
                       View Finished Products
+                      </Button>
+
+                      <Button 
+                      type="default" 
+                      onClick={handleViewInvenotry} 
+                      style={{ borderRadius: '5px', marginTop: '1rem' }}
+                      >
+                      View inventory
                       </Button>
                     </>
                   ) : (

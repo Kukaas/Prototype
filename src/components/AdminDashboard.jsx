@@ -9,29 +9,10 @@ import AdminProductions from './AdminProductions';
 
 const AdminDashboard = () => {
   const [user, setUser ] = useState(null);
-//   const [ setProductions] = useState([]);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
-
-//   useEffect(() => {
-//     const fetchProductions = async () => {
-//       try {
-//         let response;
-//         if (user.role === 'ADMIN') {
-//           response = await axios.get(`https://api-prototype-kukaas-projects.vercel.app/api/production`);
-//         } else {
-//           response = await axios.get(`https://api-prototype-kukaas-projects.vercel.app/api/production/email/${user.email}`);
-//         }
-//         setProductions(response.data);
-//       } catch (error) {
-//         console.error('Failed to fetch productions:', error);
-//       }
-//     };
-  
-//     fetchProductions();
-//   });
 
   useEffect(() => {
     const fetchUser = async () => {

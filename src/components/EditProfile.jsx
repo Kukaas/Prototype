@@ -132,7 +132,7 @@ const EditProfile = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="default" onClick={() => navigate(user.role === 'ADMIN' ? `/profile-admin/${id}` : `/profile/production/${id}`)} className="w-full rounded">
+          <Button type="default" onClick={() => navigate(user.role === 'ADMIN' ? `/profile/${id}` : `/profile/production/${id}`)} className="w-full rounded">
             Cancel
           </Button>
         </Form.Item>
