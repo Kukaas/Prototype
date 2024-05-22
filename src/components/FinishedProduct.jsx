@@ -69,10 +69,10 @@ const FinishedProduct = () => {
         // Delete the inventory item
         const deleteResponse = await axios.delete(`https://api-prototype-kukaas-projects.vercel.app/api/inventory/${inventoryItems[0].id}`);
   
-        if (!deleteResponse.ok) {
+        if (deleteResponse.status < 200 || deleteResponse.status >= 300) {
           throw new Error('Failed to delete inventory item');
         }
-  
+        
         message.success('Inventory item deleted successfully');
       } else {
         message.error('Inventory item not found');

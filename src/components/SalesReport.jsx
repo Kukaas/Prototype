@@ -42,7 +42,7 @@ const SalesReport = () => {
             return (
                 <div className="p-3 bg-white border border-gray-300 text-gray-700">
                     <p className="font-bold">{`Product Type: ${payload[0].payload.productType}`}</p>
-                    <p>{`Total Revenue: ${payload[0].value}`}</p>
+                    <p>{`Total Revenue: ₱${payload[0].value.toLocaleString()}`}</p>
                     <p>{`Month: ${month} ${year}`}</p>
                 </div>
             );
