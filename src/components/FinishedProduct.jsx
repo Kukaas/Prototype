@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, Button, message, Select } from 'antd';
+import { Table, Button, message, Select, Row, Col, Typography } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 
 const FinishedProduct = () => {
   const [data, setData] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -126,7 +128,17 @@ const FinishedProduct = () => {
   ];
 
   return (
-    <>
+    <div style={{ padding: 24 }}>
+      <Row justify="start">
+        <Col>
+            <Link onClick={() => navigate(-1)} className="text-blue-500 underline hover:text-blue-700 font-bold mb-4 text-lg">Back</Link>
+        </Col>
+      </Row>
+      <Row justify="center">
+        <Col>
+          <Typography.Title level={1}>Finished Products</Typography.Title>
+        </Col>
+      </Row>
       <Table 
         columns={columns} 
         dataSource={data} 
@@ -134,7 +146,7 @@ const FinishedProduct = () => {
         pagination={{ pageSize: 4 }}
         scroll={{ x: 1000 }}
       />;
-    </>
+    </div>
   )
 };
 

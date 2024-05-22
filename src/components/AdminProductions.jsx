@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, Select, Button, message, Space } from 'antd';
+import { Table, Select, Button, message, Space, Row, Col, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { Link, useNavigate } from 'react-router-dom';
 
 const AdminProductions = ({ role }) => {
   const [productions, setProductions] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProductions = async () => {
@@ -37,6 +39,44 @@ const AdminProductions = ({ role }) => {
       message.error('Failed to delete production');
     }
   };
+
+    //UPDATE production
+    const handleUpdate = async (id) => {
+      const status = selectedStatus[id];
+      if (status) {
+        const productionToUpdate = productions.find(prod => prod.id === id);
+        if (!productionToUpdate) {
+          message.error('Production not found');
+          return;
+        }
+  
+        const payload = {
+          productType: productionToUpdate.productType,
+          unitPrice: productionToUpdate.unitPrice,
+          quantity: productionToUpdate.quantity,
+          status: status,
+        };
+  
+        console.log('Updating status with payload:', payload);
+  
+        try {
+          await axios.put(`https://api-prototype-kukaas-projects.vercel.app/api/production/${id}`, payload);
+  
+          setProductions((prevProductions) =>
+            prevProductions.map((production) =>
+              production.id === id ? { ...production, status } : production
+            )
+          );
+  
+          message.success('Status updated successfully');
+        } catch (error) {
+          console.error('Failed to update status:', error);
+          message.error('Failed to update status');
+        }
+      } else {
+        message.error('Please select a status before updating');
+      }
+    };
 
 
   const columns = [
@@ -90,8 +130,12 @@ const AdminProductions = ({ role }) => {
       width: 100,
       render: (text, record) => (
         <Space size="middle">
+          <Button onClick={() => handleUpdate(record.id)}>
+            Update
+          </Button>
           <Button 
-            onClick={() => handleDelete(record.id)}  
+            onClick={() => handleDelete(record.id)}
+            danger
           >
             Delete
           </Button>
@@ -102,7 +146,17 @@ const AdminProductions = ({ role }) => {
   ];
 
   return (
-    <div className="productions-table-container">
+    <div style={{ padding: 24 }}>
+      <Row justify="start">
+        <Col>
+            <Link onClick={() => navigate(-1)} className="text-blue-500 underline hover:text-blue-700 font-bold mb-4 text-lg">Back</Link>
+        </Col>
+      </Row>
+      <Row justify="center">
+        <Col>
+          <Typography.Title level={1}>Production</Typography.Title>
+        </Col>
+      </Row>
       <Table
         columns={columns}
         dataSource={productions}

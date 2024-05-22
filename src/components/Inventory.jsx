@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Table, Button } from 'antd';
+import { Table, Button, Row, Col, Typography } from 'antd';
 import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Inventory() {
     const [items, setItems] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchItems = async () => {
@@ -38,13 +40,7 @@ function Inventory() {
     };
 
     const columns = [
-        { 
-            title: 'ID',
-            dataIndex: 'id', 
-            id: 'id',
-            width: 150
-        },
-        {   title: 'Type', 
+        {   title: 'Product Type', 
             dataIndex: 'type', 
             id: 'type',
             width: 150
@@ -68,7 +64,17 @@ function Inventory() {
     ];
 
     return (
-        <>
+        <div style={{ padding: 24 }}>
+            <Row justify="start">
+                <Col>
+                    <Link onClick={() => navigate(-1)} className="text-blue-500 underline hover:text-blue-700 font-bold mb-4 text-lg">Back</Link>
+                </Col>
+            </Row>
+            <Row justify="center">
+                <Col>
+                <Typography.Title level={1}>Inventory</Typography.Title>
+                </Col>
+            </Row>
             <Table 
                 columns={columns} 
                 dataSource={items} 
@@ -76,7 +82,7 @@ function Inventory() {
                 pagination={{ pageSize: 4 }}
                 scroll={{ x: 1000 }}
             />
-        </>
+        </div>
     )
 
 }
