@@ -83,9 +83,11 @@ const FinishedProduct = () => {
         <Select 
           defaultValue={record.status} 
           onChange={(value) => setSelectedStatus({ ...selectedStatus, [record.id]: value })}
+          disabled={record.status === "SOLD"}
         >
+          
           <Option value="SOLD">SOLD</Option>
-          <Option value="Available">Available</Option>
+          <Option value="Available">SOLD </Option>
         </Select>
       ),
 

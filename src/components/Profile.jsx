@@ -50,6 +50,10 @@ const Profile = () => {
     navigate(`/profile/admin/inventory`);
   }
 
+  const handleViewSalesReport = () => {
+    navigate(`/profile/admin/sales-report`);
+  }
+
   return (
     <div style={{ padding: 24 }}>
       <Link to="/" className="text-blue-500 underline hover:text-blue-700 font-bold mb-4 text-lg">Home</Link>
@@ -123,6 +127,14 @@ const Profile = () => {
                       style={{ borderRadius: '5px', marginTop: '1rem' }}
                       >
                       View inventory
+                      </Button>
+
+                      <Button 
+                      type="default" 
+                      onClick={handleViewSalesReport} 
+                      style={{ borderRadius: '5px', marginTop: '1rem' }}
+                      >
+                      View Sales Report
                       </Button>
                     </>
                   ) : (
