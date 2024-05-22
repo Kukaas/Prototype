@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Button, Row, Col, Typography } from 'antd';
+import { Table, Button, Row, Col, Typography, Modal } from 'antd';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ function Inventory() {
         fetchItems();
     }, []);
 
-    const deleteItem = async (id) => {
+    const handleDelete = async (id) => {
         try {
             await axios.delete(`https://api-prototype-kukaas-projects.vercel.app/api/inventory/${id}`);
             setItems(items.filter(item => item.id !== id));
@@ -30,7 +30,7 @@ function Inventory() {
         }
     };
     
-    const editItem = async (id, newValues) => {
+    const handleUpdate = async (id, newValues) => {
         try {
             const response = await axios.put(`https://api-prototype-kukaas-projects.vercel.app/api/inventory/${id}`, newValues);
             setItems(items.map(item => item.id === id ? response.data : item));
@@ -56,8 +56,27 @@ function Inventory() {
             width: 150,
             render: (text, record) => (
                 <>
-                    <Button onClick={() => editItem(record.id)} style={{ marginRight: '10px' }} primary>Edit</Button>
-                    <Button onClick={() => deleteItem(record.id)} danger>Delete</Button>
+                    <Button onClick={() => handleUpdate(record.id)} style={{ marginRight: '10px' }} primary>Edit</Button>
+                    <Button 
+                    onClick={() => {
+                        Modal.confirm({
+                            title: 'Are you sure you want to delete this item?',
+                            content: 'This action cannot be undone.',
+                            okText: 'Yes',
+                            okType: 'danger',
+                            cancelText: 'No',
+                            onOk() {
+                            handleDelete(record.id);
+                            },
+                            onCancel() {
+                            console.log('Cancel');
+                            },
+                        });
+                        }} 
+                        danger
+                    >
+                        Delete
+                    </Button>
                 </>
             ),
         },

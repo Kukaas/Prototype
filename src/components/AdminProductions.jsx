@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, Select, Button, message, Space, Row, Col, Typography } from 'antd';
+import { Table, Select, Button, message, Space, Row, Col, Typography, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Link, useNavigate } from 'react-router-dom';
@@ -134,7 +134,21 @@ const AdminProductions = ({ role }) => {
             Update
           </Button>
           <Button 
-            onClick={() => handleDelete(record.id)}
+            onClick={() => {
+              Modal.confirm({
+                title: 'Are you sure you want to delete this item?',
+                content: 'This action cannot be undone.',
+                okText: 'Yes',
+                okType: 'danger',
+                cancelText: 'No',
+                onOk() {
+                  handleDelete(record.id);
+                },
+                onCancel() {
+                  console.log('Cancel');
+                },
+              });
+            }} 
             danger
           >
             Delete

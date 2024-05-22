@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, Select, Button, message, Space } from 'antd';
+import { Table, Select, Button, message, Space, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
@@ -132,13 +132,27 @@ const Productions = ({ email }) => {
           <Button onClick={() => handleUpdate(record.id)} disabled={record.status === 'COMPLETED'}>
             Update
           </Button>
-          <Button 
-            onClick={() => handleDelete(record.id)} 
+          <Button
+            onClick={() => {
+              Modal.confirm({
+                title: 'Are you sure you want to delete this item?',
+                content: 'This action cannot be undone.',
+                okText: 'Yes',
+                okType: 'danger',
+                cancelText: 'No',
+                  onOk() {
+                    handleDelete(record.id);
+                  },
+                  onCancel() {
+                    console.log('Cancel');
+                  },
+            });
+            }} 
+            danger
             disabled={record.status === 'COMPLETED'}  
-            danger 
             style={{ 
               color: record.status !== 'COMPLETED' ? '#ff4d4f' : ''
-            }}          
+            }}   
           >
             Delete
           </Button>

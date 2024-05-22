@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, Button, message, Select, Row, Col, Typography } from 'antd';
+import { Table, Button, message, Select, Row, Col, Typography, Modal } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
@@ -31,6 +31,57 @@ const FinishedProduct = () => {
     }
   };
 
+  const updateSalesReport = async (productType, totalPrice) => {
+    try {
+      // Search for the product type
+      const response = await axios.get(`https://api-prototype-kukaas-projects.vercel.app/api/sales-report?type=${productType}`);
+      const salesReports = await response.data;
+  
+      // If the product type exists
+      if (salesReports.length > 0) {
+        // Add the total price to the total revenue
+        const totalRevenue = salesReports[0].totalRevenue + totalPrice;
+  
+        // Update the sales report
+        const updateResponse = await axios.put(`https://api-prototype-kukaas-projects.vercel.app/api/sales-report/${salesReports[0].id}`, { totalRevenue });
+  
+        if (!updateResponse.ok) {
+          throw new Error('Failed to update sales report');
+        }
+  
+        message.success('Sales report updated successfully');
+      } else {
+        message.error('Product type not found');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteInventoryItem = async (productType) => {
+    try {
+      // Search for the inventory item
+      const response = await axios.get(`https://api-prototype-kukaas-projects.vercel.app/api/inventory?type=${productType}`);
+      const inventoryItems = await response.data;
+  
+      // If the inventory item exists
+      if (inventoryItems.length > 0) {
+        // Delete the inventory item
+        const deleteResponse = await axios.delete(`https://api-prototype-kukaas-projects.vercel.app/api/inventory/${inventoryItems[0].id}`);
+  
+        if (!deleteResponse.ok) {
+          throw new Error('Failed to delete inventory item');
+        }
+  
+        message.success('Inventory item deleted successfully');
+      } else {
+        message.error('Inventory item not found');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleStatusChange = async (id) => {
     const status = selectedStatus[id];
 
@@ -49,8 +100,6 @@ const FinishedProduct = () => {
         totalCost: finishedProductToUpdate.totalCost,
       };
 
-      console.log('Updating status with payload:', payload);
-
       try {
         await axios.put(`https://api-prototype-kukaas-projects.vercel.app/api/finished-product/${id}`, payload);
 
@@ -58,13 +107,18 @@ const FinishedProduct = () => {
           prevData.map((item) => (item.id === id ? { ...item, status } : item))
         );
         message.success('Finished product updated successfully');
+
+        // If the status is updated to 'SOLD', update the sales report
+        if (status === 'SOLD') {
+          await updateSalesReport(finishedProductToUpdate.productType, finishedProductToUpdate.totalCost);
+          await deleteInventoryItem(finishedProductToUpdate.productType);
+        }
       } catch (error) {
-        message.error('Failed to update finished product');
+        console.error('Failed to update status:', error);
       }
     }
   };
   
-
 
   const columns = [
     {
@@ -89,7 +143,7 @@ const FinishedProduct = () => {
         >
           
           <Option value="SOLD">SOLD</Option>
-          <Option value="Available">SOLD </Option>
+          <Option value="Available">AVAILABLE</Option>
         </Select>
       ),
 
@@ -105,11 +159,6 @@ const FinishedProduct = () => {
       key: 'totalCost',
     },
     {
-      title: 'Production ID',
-      dataIndex: ['production', 'id'],
-      key: 'productionId',
-    },
-    {
       title: 'Assigned Employee',
       dataIndex: ['production', 'user', 'name'],
       key: 'userName',
@@ -120,7 +169,26 @@ const FinishedProduct = () => {
       render: (text, record) => (
         <>
           <Button onClick={() => handleStatusChange(record.id)}>Update</Button>
-          <Button onClick={() => handleDelete(record.id)} danger>Delete</Button>
+          <Button 
+            onClick={() => {
+              Modal.confirm({
+                title: 'Are you sure you want to delete this item?',
+                content: 'This action cannot be undone.',
+                okText: 'Yes',
+                okType: 'danger',
+                cancelText: 'No',
+                onOk() {
+                  handleDelete(record.id);
+                },
+                onCancel() {
+                  console.log('Cancel');
+                },
+              });
+            }} 
+            danger
+          >
+            Delete
+          </Button>
         </>
       ),
     },
