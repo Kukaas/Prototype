@@ -17,7 +17,6 @@ const AddProductions = () => {
         message.error('Failed to load user data');
       }
     };
-
     fetchUser();
   }, [id]);
 

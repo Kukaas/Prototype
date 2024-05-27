@@ -132,23 +132,6 @@ const FinishedProduct = () => {
       key: 'quantity',
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (text, record) => (
-        <Select 
-          defaultValue={record.status} 
-          onChange={(value) => setSelectedStatus({ ...selectedStatus, [record.id]: value })}
-          disabled={record.status === "SOLD"}
-        >
-          
-          <Option value="SOLD">SOLD</Option>
-          <Option value="Available">AVAILABLE</Option>
-        </Select>
-      ),
-
-    },
-    {
       title: 'Unit Price',
       dataIndex: 'unitPrice',
       key: 'unitPrice',
@@ -159,9 +142,20 @@ const FinishedProduct = () => {
       key: 'totalCost',
     },
     {
-      title: 'Assigned Employee',
-      dataIndex: ['production', 'user', 'name'],
-      key: 'userName',
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (text, record) => (
+        <Select 
+          defaultValue={record.status} 
+          onChange={(value) => setSelectedStatus({ ...selectedStatus, [record.id]: value })}
+          disabled={record.status === "SOLD"}
+        >
+          <Option value="AVAILABLE">AVAILABLE</Option>
+          <Option value="SOLD">SOLD</Option>
+        </Select>
+      ),
+
     },
     {
       title: 'Action',

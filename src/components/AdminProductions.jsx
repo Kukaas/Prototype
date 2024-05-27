@@ -40,45 +40,6 @@ const AdminProductions = ({ role }) => {
     }
   };
 
-    //UPDATE production
-    const handleUpdate = async (id) => {
-      const status = selectedStatus[id];
-      if (status) {
-        const productionToUpdate = productions.find(prod => prod.id === id);
-        if (!productionToUpdate) {
-          message.error('Production not found');
-          return;
-        }
-  
-        const payload = {
-          productType: productionToUpdate.productType,
-          unitPrice: productionToUpdate.unitPrice,
-          quantity: productionToUpdate.quantity,
-          status: status,
-        };
-  
-        console.log('Updating status with payload:', payload);
-  
-        try {
-          await axios.put(`https://api-prototype-kukaas-projects.vercel.app/api/production/${id}`, payload);
-  
-          setProductions((prevProductions) =>
-            prevProductions.map((production) =>
-              production.id === id ? { ...production, status } : production
-            )
-          );
-  
-          message.success('Status updated successfully');
-        } catch (error) {
-          console.error('Failed to update status:', error);
-          message.error('Failed to update status');
-        }
-      } else {
-        message.error('Please select a status before updating');
-      }
-    };
-
-
   const columns = [
     {
       title: 'Product Type',
@@ -106,6 +67,12 @@ const AdminProductions = ({ role }) => {
       width: 100,
     },
     {
+      title: 'Assigned Employee',
+      dataIndex: ['user', 'name'],
+      key: 'userName',
+      width: 200,
+    },
+    {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
@@ -130,9 +97,6 @@ const AdminProductions = ({ role }) => {
       width: 100,
       render: (text, record) => (
         <Space size="middle">
-          <Button onClick={() => handleUpdate(record.id)}>
-            Update
-          </Button>
           <Button 
             onClick={() => {
               Modal.confirm({
